@@ -13,16 +13,17 @@ function actualizarPresupuesto(valor) {
 }
 
 function mostrarPresupuesto() {
-    return `Tu presupuesto actual es de ${presupuesto}€`;
+    return `Tu presupuesto actual es de ${presupuesto} €`;
 }
 
-function Gasto (descripcion, valor) {
+function CrearGasto (descripcion, valor) {
 
-    this.descripcion = (typeof descripcion === 'strig') ? descripcion : null;
+    this.descripcion = (typeof descripcion === 'string') ? descripcion : null;
+
     this.valor = (!(isNaN(valor)) && (valor >= 0)) ? valor : 0;
 
     this.mostrarGasto = function() {
-        return `Gasto correspondiente a ${descripcion} con valor ${valor}€`;
+        return `Gasto correspondiente a ${this.descripcion} con valor ${this.valor} €`;
     };
 
     this.actualizarDescripcion = function(descripcionIntroducida) {
@@ -32,8 +33,9 @@ function Gasto (descripcion, valor) {
     };
 
     this.actualizarValor = function(valorIntroducido) {
-        this.valor = ((!(isNaN(valor)) && (valor >= 0))) ? valorIntroducido : valor;
+        this.valor = ((!(isNaN(valorIntroducido)) && (valorIntroducido >= 0))) ? valorIntroducido : this.valor;
     }
+
 }
 
 function listarGastos() {
@@ -41,8 +43,28 @@ function listarGastos() {
     return gastos;
 }
 
-function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
+function anyadirGasto () {
 
+}
+
+function borrarGasto () {
+    
+}
+
+function calcularTotalGastos () {
+    
+}
+
+function calcularBalance () {
+    
+}
+
+function filtrarGastos () {
+    
+}
+
+function agruparGastos () {
+    
 }
 
 export   {
