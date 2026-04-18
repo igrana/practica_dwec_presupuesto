@@ -103,8 +103,6 @@ function CrearGasto (descripcion, valor, fecha, ...etiquetas) {
             etiquetasFiltradas = [];
         }
     }
-
-
 }
 
 function listarGastos () {
