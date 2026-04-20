@@ -16,6 +16,11 @@ function mostrarPresupuesto() {
     return `Tu presupuesto actual es de ${presupuesto} €`;
 }
 
+//Se comprueba si la fecha es válida viendo si Date.parse(fecha) es un número (timestamp)
+let esFechaValida = function(fecha) {
+    return !isNaN(Date.parse(fecha));
+};
+
 function CrearGasto (descripcion, valor, fecha, ...etiquetas) {
 
     //Asegurarse de que es un string
@@ -23,12 +28,8 @@ function CrearGasto (descripcion, valor, fecha, ...etiquetas) {
 
     this.valor = (!(isNaN(valor)) && (valor >= 0)) ? valor : 0;
 
-    //Se comprueba si la fecha es válida viendo si Date.parse(fecha) es un número
-    this.esFechaValida = function(fecha) {
-        return !isNaN(Date.parse(fecha));
-    };
     //La fecha se almacena en timestamp (con Date.parse(fecha)) o se almacena el timestamp de la fecha actual (Date.now())
-    this.fecha = (this.esFechaValida(fecha)) ? Date.parse(fecha) : Date.now();
+    this.fecha = (esFechaValida(fecha)) ? Date.parse(fecha) : Date.now();
     
     this.etiquetas = [...etiquetas];
 
@@ -67,7 +68,7 @@ function CrearGasto (descripcion, valor, fecha, ...etiquetas) {
     };
 
     this.actualizarFecha = function(fechaActualizada) {
-        this.fecha = (this.esFechaValida(fechaActualizada)) ? Date.parse(fechaActualizada) : this.fecha;
+        this.fecha = (esFechaValida(fechaActualizada)) ? Date.parse(fechaActualizada) : this.fecha;
     };
 
     //Añadir etiquetas ignorando las duplicadas
@@ -234,8 +235,43 @@ function filtrarGastos (filtro) {
     return gastosFiltrados;
 }
 
-function agruparGastos () {
-    
+//Devuelve un objeto con los resultados de realizar una agrupación por período temporal
+//Devuelve la suma de valores de los gastos de ese período (ej. //"2021-09: 5")
+function agruparGastos (periodo, etiquetas, fechaDesde, fechaHasta) {
+
+    //Mes es el periodo por defecto
+    if ((periodo !== 'dia' && periodo !== 'anyo')) {
+        periodo === 'mes';
+    }
+
+    //Si no se indica o no es válida, fechaHasta será la fecha actual
+    if (isNaN(Date.parse(fechaHasta ))) {
+        fechaHasta = Date.now();
+    }
+
+    let gastosFiltrados = filtrarGastos({
+        fechaDesde: fechaDesde, 
+        fechaHasta: fechaHasta,
+        etiquetasTiene: etiquetas});
+
+    return gastosFiltrados.reduce (
+        //acc es el objeto acumulador que guarda la propiedad periodo y su valor
+        function(acc, gasto) {
+            //Agrupación será una fehca válida con formato tipo "2021-10"
+            
+            let agrupacion = gasto.obtenerPeriodoAgrupacion(periodo);
+
+            if (acc[agrupacion] === undefined) {
+                acc[agrupacion] = gasto.valor;
+            } else {
+                acc[agrupacion] += gasto.valor; 
+            }
+            return acc;
+        },
+        //Valor inicial es un objeto vacío 
+        {});
+
+
 }
 
 function estaVacio(objeto) {
