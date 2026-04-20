@@ -16,19 +16,21 @@ function mostrarPresupuesto() {
     return `Tu presupuesto actual es de ${presupuesto} €`;
 }
 
-//Se comprueba si la fecha es válida viendo si Date.parse(fecha) es un número (timestamp)
+//Comprueba si la fecha está en un formato válido 
+// si Date.parse(fecha) es un número (timestamp)
 let esFechaValida = function(fecha) {
     return !isNaN(Date.parse(fecha));
 };
 
 function CrearGasto (descripcion, valor, fecha, ...etiquetas) {
 
-    //Asegurarse de que es un string
+    //Asegura de que es un string
     this.descripcion = (typeof descripcion === 'string') ? descripcion : null;
 
     this.valor = (!(isNaN(valor)) && (valor >= 0)) ? valor : 0;
 
-    //La fecha se almacena en timestamp (con Date.parse(fecha)) o se almacena el timestamp de la fecha actual (Date.now())
+    //La fecha se almacena en timestamp (con Date.parse(fecha)) 
+    // o se almacena el timestamp de la fecha actual (Date.now())
     this.fecha = (esFechaValida(fecha)) ? Date.parse(fecha) : Date.now();
     
     this.etiquetas = [...etiquetas];
@@ -48,9 +50,10 @@ function CrearGasto (descripcion, valor, fecha, ...etiquetas) {
     };
 
     this.mostrarGastoCompleto = function() {
-        //El timestamp se transforma a objeto Date con new Date para que .toLocaleString() lo transforme
-        //en una fecha válida con formato local.
-       let gastoCompleto = `Gasto correspondiente a ${this.descripcion} con valor ${this.valor} €.\n`+
+        //El timestamp se transforma a objeto Date con new Date para que 
+        // .toLocaleString() lo transforme en una fecha válida con formato local.
+       let gastoCompleto = `Gasto correspondiente a ${this.descripcion}` + 
+       ` con valor ${this.valor} €.\n`+
        `Fecha: ${new Date(this.fecha).toLocaleString()}\n`+
        `Etiquetas:\n${this.listarEtiquetas()}`
 
@@ -121,10 +124,10 @@ function CrearGasto (descripcion, valor, fecha, ...etiquetas) {
             dia = '0' + dia;
         }
         if (periodo === 'dia') {
-            return anyo + '-' + mes + '-' + dia;
+            return `${anyo}-${mes}-${dia}`;
         }
         if (periodo === 'mes') {
-            return anyo + '-' + mes;
+            return `${anyo}-${mes}`;
         }
         if (periodo === 'anyo') {
             return anyo;
@@ -178,10 +181,8 @@ function filtrarGastos (filtro) {
 
     let gastosFiltrados = [...gastos];
 
-    //*Operador ternario que comprueba que existe la propiedad
-    // para evitar que haya error si es undefined.
-    //**Las fechas del filtro estarán en formato '2021-10-15'
 
+    //**Las fechas del filtro estarán en formato '2021-10-15'
     if (!isNaN(Date.parse(filtro.fechaDesde))) {
         gastosFiltrados = gastosFiltrados.filter(gasto => gasto.fecha >= Date.parse(filtro.fechaDesde));
     }
@@ -258,12 +259,14 @@ function agruparGastos (periodo, etiquetas, fechaDesde, fechaHasta) {
         //acc es el objeto acumulador que guarda la propiedad periodo y su valor
         function(acc, gasto) {
             //Agrupación será una fehca válida con formato tipo "2021-10"
-            
             let agrupacion = gasto.obtenerPeriodoAgrupacion(periodo);
 
+            //Si la propiedad agrupación con el valor de ese gasto no existe, 
+            //se crea con valor igual al valor de ese gasto.
             if (acc[agrupacion] === undefined) {
                 acc[agrupacion] = gasto.valor;
             } else {
+                //Si ya existe esa agrupación se suma el valor.
                 acc[agrupacion] += gasto.valor; 
             }
             return acc;
@@ -274,6 +277,7 @@ function agruparGastos (periodo, etiquetas, fechaDesde, fechaHasta) {
 
 }
 
+//Por si hubiera problemas con objetos vacíos
 function estaVacio(objeto) {
   for (const propiedad in objeto) {
     if (Object.hasOwn(objeto, propiedad)) {
