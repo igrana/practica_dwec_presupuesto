@@ -1,3 +1,5 @@
+//Lógica de  negocio de la aplicación.
+//Funciones para crear, editar y borrar gastos.
 let presupuesto = 0;
 let gastos = [];
 let idGasto = 0;
@@ -137,6 +139,8 @@ function CrearGasto (descripcion, valor, fecha, ...etiquetas) {
     };
 }
 
+//Función necesaria para expotar la variable gastos
+//al resto de módulos
 function listarGastos () {
     return gastos;
 }
