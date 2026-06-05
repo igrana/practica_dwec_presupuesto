@@ -11,8 +11,6 @@ gestionPresupuesto.actualizarPresupuesto(nuevoValor);
 let presupuestoPintado = gestionPresupuesto.mostrarPresupuesto();
 gestionPresupuestoWeb.mostrarDatoEnId('presupuesto', presupuestoPintado);
 
-let elementoPrueba = document.getElementById('elemento-prueba');
-
 let nombreGasto = 0;
 
 

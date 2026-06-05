@@ -1,8 +1,6 @@
 //Utilidades para mosttar los datos de la aplicación en innteraccionHTML.html
 //Funciones para interactuar con el DOM.
 
-import * as gestionPresupuesto from "./gestionPresupuesto.js";
-
 function mostrarDatoEnId (idElemento, valor) {
 
     let elemento = document.getElementById(idElemento);
@@ -57,6 +55,24 @@ function mostrarGastosAgrupadosWeb (idElemento, agrup, periodo) {
     let divAgrupacion = document.createElement('div');
     divAgrupacion.classList.add('agrupacion');
 
+    function periodoToString(periodo) {
+        if (periodo === 'anyo') {
+            return 'año';
+        }
+
+        if (periodo === 'mes') {
+            return 'mes';
+        }
+
+        if (periodo === 'dia') {
+            return 'día';
+        }
+    }
+
+    let h1Agrupacion = document.createElement('h1');
+    h1Agrupacion.textContent = `Gastos agrupados por ${periodoToString(periodo)}`
+    divAgrupacion.append(h1Agrupacion);
+
     for (let propiedad in agrup) {
 
         let divAgrupacionDato = document.createElement('div');
@@ -69,7 +85,7 @@ function mostrarGastosAgrupadosWeb (idElemento, agrup, periodo) {
 
         let spanAgrupacionDatoValor = document.createElement('span');
         spanAgrupacionDatoValor.classList.add('agrupacion-dato-valor');
-        spanAgrupacionDatoValor.textContent = propiedad.value;
+        spanAgrupacionDatoValor.textContent = agrup[propiedad];
         divAgrupacionDato.append(spanAgrupacionDatoValor);
         
         divAgrupacion.append(divAgrupacionDato);
