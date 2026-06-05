@@ -37,12 +37,15 @@ gestionPresupuestoWeb.mostrarDatoEnId('gastos-totales', gastosTotales);
 let balanceTotal = gestionPresupuesto.calcularBalance();
 gestionPresupuestoWeb.mostrarDatoEnId('balance-total', balanceTotal);
 
-let listadoGastosCompleto = gestionPresupuesto.listarGastos();
-gestionPresupuestoWeb.mostrarGastoWeb('listado-gastos-completo', listadoGastosCompleto)
+let listadoGastos = gestionPresupuesto.listarGastos();
+
+listadoGastos.forEach(gasto => {
+    gestionPresupuestoWeb.mostrarGastoWeb('listado-gastos-completo', gasto);
+})
 
 const filtro1 = {
-    fechaDesde: '2021-09',
-    fechaHasta: '2021-09'
+    fechaDesde: '2021-09-01',
+    fechaHasta: '2021-09-30'
 }
 
 const filtro2 = {
@@ -60,16 +63,24 @@ const filtro4 = {
 }
 
 let gastosFiltrados1 = gestionPresupuesto.filtrarGastos(filtro1);
-gestionPresupuestoWeb.mostrarGastoWeb('listado-gastos-filtrado-1', gastosFiltrados1);
+for (let gasto of gastosFiltrados1) {
+    gestionPresupuestoWeb.mostrarGastoWeb('listado-gastos-filtrado-1', gasto);
+}
 
 let gastosFiltrados2 = gestionPresupuesto.filtrarGastos(filtro2);
-gestionPresupuestoWeb.mostrarGastoWeb('listado-gastos-filtrado-2', gastosFiltrados2);
+for (let gasto of gastosFiltrados2) {
+    gestionPresupuestoWeb.mostrarGastoWeb('listado-gastos-filtrado-2', gasto);
+}
 
 let gastosFiltrados3 = gestionPresupuesto.filtrarGastos(filtro3);
-gestionPresupuestoWeb.mostrarGastoWeb('listado-gastos-filtrado-3', gastosFiltrados3);
+for (let gasto of gastosFiltrados3) {
+    gestionPresupuestoWeb.mostrarGastoWeb('listado-gastos-filtrado-3', gasto);
+}
 
 let gastosFiltrados4 = gestionPresupuesto.filtrarGastos(filtro4);
-gestionPresupuestoWeb.mostrarGastoWeb('listado-gastos-filtrado-4', gastosFiltrados4);
+for (let gasto of gastosFiltrados4) {
+    gestionPresupuestoWeb.mostrarGastoWeb('listado-gastos-filtrado-4', gasto);
+}
 
 
 gestionPresupuestoWeb.mostrarGastosAgrupadosWeb('agrupacion-dia', gestionPresupuesto.agruparGastos('dia'), 'dia');

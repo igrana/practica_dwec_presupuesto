@@ -11,47 +11,40 @@ function mostrarDatoEnId (idElemento, valor) {
 
 function mostrarGastoWeb (idElemento, gasto) {
 
-    //Traer los gastos
-    let gastos = gestionPresupuesto.listarGastos();
+    let elemento = document.getElementById(idElemento);
 
-    for (let gasto of gastos) {
-        
-        let divGasto = document.createElement('div');
-        divGasto.classList.add('gasto');
-    
-        let divGastoDescripcion = document.createElement('div');
-        divGastoDescripcion.classList.add('gasto-descripcion');
-        divGastoDescripcion.textContent = gasto.descripcion;
-        divGasto.append(divGastoDescripcion);
-    
-    
-        let divGastoFecha = document.createElement('div');
-        divGastoFecha.classList.add('gasto-fecha');
-        let objetoFecha = new Date(gasto.fecha);
-        divGastoFecha.textContent = objetoFecha.toLocaleDateString();
-        divGasto.append(divGastoFecha);
-    
-        let divGastoValor = document.createElement('div');
-        divGastoValor.classList.add('gasto-valor');
-        divGasto.textContent = gasto.valor;
-        divGasto.append(divGastoValor);
-    
-        let divGastoEtiquetas = document.createElement('div');
-        divGastoEtiquetas.classList.add('gasto-etiquetas');
-    
-        gasto.etiquetas.forEach(function(etiqueta, indice, etiquetas) {
+    let divGasto = document.createElement('div');
+    divGasto.classList.add('gasto');
 
-            let divGastoEtiqueta = document.createElement('span');
-            divGastoEtiqueta.classList.add('gasto-etiquetas-etiqueta');
-            divGastoEtiqueta.textContent = gasto.etiquetas[indice];
-            divGastoEtiquetas.append(divGastoEtiqueta);
-        });
+    let divGastoDescripcion = document.createElement('div');
+    divGastoDescripcion.classList.add('gasto-descripcion');
+    divGastoDescripcion.textContent = gasto.descripcion;
+    divGasto.append(divGastoDescripcion);
 
-        divGasto.append(divGastoEtiquetas);
-    
-        let elemento = document.getElementById(idElemento);
-        elemento.append(divGasto);
-    }
+    let divGastoFecha = document.createElement('div');
+    divGastoFecha.classList.add('gasto-fecha');
+    let objetoFecha = new Date(gasto.fecha);
+    divGastoFecha.textContent = objetoFecha.toLocaleDateString();
+    divGasto.append(divGastoFecha);
+
+    let divGastoValor = document.createElement('div');
+    divGastoValor.classList.add('gasto-valor');
+    divGastoValor.textContent = gasto.valor;
+    divGasto.append(divGastoValor);
+
+    let divGastoEtiquetas = document.createElement('div');
+    divGastoEtiquetas.classList.add('gasto-etiquetas');
+
+    gasto.etiquetas.forEach(function(etiqueta, indice, etiquetas) {
+
+        let divGastoEtiqueta = document.createElement('span');
+        divGastoEtiqueta.classList.add('gasto-etiquetas-etiqueta');
+        divGastoEtiqueta.textContent = etiqueta;
+        divGastoEtiquetas.append(divGastoEtiqueta);
+    });
+
+    divGasto.append(divGastoEtiquetas);
+    elemento.append(divGasto);
 }
 
 

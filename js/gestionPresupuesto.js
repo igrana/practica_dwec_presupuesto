@@ -246,7 +246,7 @@ function agruparGastos (periodo, etiquetas, fechaDesde, fechaHasta) {
 
     //Mes es el periodo por defecto
     if ((periodo !== 'dia' && periodo !== 'anyo')) {
-        periodo === 'mes';
+        periodo = 'mes';
     }
 
     //Si no se indica o no es válida, fechaHasta será la fecha actual
