@@ -1,5 +1,6 @@
 //Utilidades para mosttar los datos de la aplicación en innteraccionHTML.html
 //Funciones para interactuar con el DOM.
+import * as gestionPresupuesto from './gestionPresupuesto.js';
 
 function mostrarDatoEnId (idElemento, valor) {
 
@@ -38,10 +39,39 @@ function mostrarGastoWeb (idElemento, gasto) {
         let divGastoEtiqueta = document.createElement('span');
         divGastoEtiqueta.classList.add('gasto-etiquetas-etiqueta');
         divGastoEtiqueta.textContent = etiqueta;
+
+        let objetoBorrarEtiquetas = new BorrarEtiquetasHandle(gasto);
+        divGastoEtiqueta.addEventListener('click', objetoBorrarEtiquetas);
+
         divGastoEtiquetas.append(divGastoEtiqueta);
     });
 
     divGasto.append(divGastoEtiquetas);
+
+    //Creación del botón Editar
+    let buttonEditar = document.createElement('button');
+    buttonEditar.type = 'button';
+    buttonEditar.textContent = 'Editar';
+    buttonEditar.classList.add('gasto-editar');
+
+    let nuevoObjetoEditar = new EditarHandle(gasto);
+    buttonEditar.addEventListener('click', nuevoObjetoEditar)
+
+    divGasto.append(buttonEditar);
+
+    //Creación del botón Borrar
+    let buttonBorrar = document.createElement('button');
+    buttonBorrar.type = 'button';
+    buttonBorrar.textContent = 'Borrar';
+    buttonBorrar.classList.add('gasto-borrar');
+
+    let nuevoObjetoBorrar = new BorrarHandle(gasto);
+    buttonBorrar.addEventListener('click', nuevoObjetoBorrar);
+
+    divGasto.append(buttonBorrar);
+
+    //O
+
     elemento.append(divGasto);
 }
 
@@ -93,11 +123,140 @@ function mostrarGastosAgrupadosWeb (idElemento, agrup, periodo) {
 
     let elemento = document.getElementById(idElemento);
     elemento.appendChild(divAgrupacion);
+}
 
+function pintarPresupuesto() {
+    let presupuestoPintado = gestionPresupuesto.mostrarPresupuesto();
+    mostrarDatoEnId('presupuesto', presupuestoPintado);
+}
+
+function pintarGastosTotales() {
+    let gastosTotales = gestionPresupuesto.calcularTotalGastos();
+    mostrarDatoEnId('gastos-totales', gastosTotales);
+}
+
+function pintarBalanceTotal() {
+    let balanceTotal = gestionPresupuesto.calcularBalance();
+    mostrarDatoEnId('balance-total', balanceTotal);
+}
+
+function pintarListadoGastos() {
+    let listadoGastos = gestionPresupuesto.listarGastos();
+    listadoGastos.forEach(gasto => {
+        mostrarGastoWeb('listado-gastos-completo', gasto);
+    })
+}
+
+//Actualiza toda la página (menos filtrados y agrupaciones por simplificar)
+function repintar() {
+
+    pintarPresupuesto();
+    pintarGastosTotales();
+    pintarBalanceTotal();
+
+    //Limpiar el contenedor
+    let contenedorListadoGastos = document.getElementById('listado-gastos-completo');
+    contenedorListadoGastos.innerHTML = '';
+
+    pintarListadoGastos();
+
+}
+
+function nuevoGastoWeb() {
+    let nuevaDescripcion = prompt('Inserte la nueva descrpción');
+
+    let nuevoValor = prompt('Inserte el nuevo valor');
+    nuevoValor = Number(nuevoValor);
+    gestionPresupuesto.actualizarPresupuesto(nuevoValor);
+
+    let nuevaFecha = prompt('Inserte la nueva fecha en formato yyyy-mm-dd');
+
+    let nuevasEtiquetas = prompt('Inserte las nuevas etiquetas en formato etiqueta1,etiqueta2,etiqueta3');
+    nuevasEtiquetas = nuevasEtiquetas.split(",");
+
+    let nuevoGasto = new gestionPresupuesto.CrearGasto(nuevaDescripcion, nuevoValor, nuevaFecha, ...nuevasEtiquetas);
+    gestionPresupuesto.anyadirGasto(nuevoGasto);
+    repintar();
+}
+
+//Función que se utiliza como objeto manejador de eventos para editar un gasto
+//que se enviará desde el botón.
+function EditarHandle(gasto) {
+
+    //Guardar el gasto como propiedad en el objeto manejador:
+    this.gasto = gasto;
+
+    this.handleEvent = function(event) {
+
+    let nuevaDescripcion = prompt('Inserte la nueva descrpción', 
+        this.gasto.descripcion);
+
+    let nuevoValor = prompt('Inserte el nuevo valor', 
+        this.gasto.valor);
+
+    nuevoValor = Number(nuevoValor);
+    gestionPresupuesto.actualizarPresupuesto(nuevoValor);
+
+    let nuevaFecha = prompt('Inserte la nueva fecha en formato yyyy-mm-dd', 
+        this.gasto.fecha);
+
+    let nuevasEtiquetas = prompt('Inserte las nuevas etiquetas en formato etiqueta1,etiqueta2,etiqueta3',
+        this.gasto.etiquetas);
+
+    nuevasEtiquetas = nuevasEtiquetas.split(",");
+
+    let nuevoGasto = new gestionPresupuesto.CrearGasto(nuevaDescripcion, nuevoValor, nuevaFecha, ...nuevasEtiquetas);
+    gestionPresupuesto.anyadirGasto(nuevoGasto);
+    repintar();
+
+    this.gasto.actualizarDescripcion(nuevaDescripcion);
+    this.gasto.actualizarValor(nuevoValor);
+    this.gasto.actualizarFecha(nuevaFecha);
+    this.gasto.anyadirEtiquetas(...nuevasEtiquetas);
+
+    repintar();
+    };
+}
+
+function BorrarHandle(gasto) {
+
+    //Guardar el gasto como propiedad en el objeto manejador:
+    this.gasto = gasto;
+
+    this.handleEvent = function(event) {
+        let idGastoBorrar = this.gasto.id;
+        gestionPresupuesto.borrarGasto(idGastoBorrar);
+        repintar();
+    }
+}
+
+function BorrarEtiquetasHandle(etiqueta) {
+
+    //Guardar el gasto como propiedad en el objeto manejador:
+    this.etiqueta = etiqueta;
+
+    this.handleEvent = function(event) {
+        gestionPresupuesto.BorrarEtiquetas(etiqueta);
+        repintar();
+    }
+}
+
+function inicializarEventos() {
+    let btnactualizarpresupuesto =  document.getElementById('actualizarpresupuesto');
+    btnactualizarpresupuesto.addEventListener('click', repintar);
+
+    let btnanyadirgasto = document.getElementById('anyadirgasto');
+    btnanyadirgasto.addEventListener('click', nuevoGastoWeb);
 }
 
 export {
     mostrarDatoEnId,
     mostrarGastoWeb,
     mostrarGastosAgrupadosWeb,
+    repintar,
+    nuevoGastoWeb,
+    EditarHandle,
+    BorrarHandle,
+    BorrarEtiquetasHandle,
+    inicializarEventos
     }
