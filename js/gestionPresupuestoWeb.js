@@ -1,5 +1,15 @@
 //Utilidades para mosttar los datos de la aplicación en innteraccionHTML.html
 //Funciones para interactuar con el DOM.
+
+
+//**************************************
+// El ejercicio no pasa dos de los tests posiblemente por 
+// UN PROBLEMA CON LAS ETIQUETAS */
+
+
+
+
+
 import * as gestionPresupuesto from './gestionPresupuesto.js';
 
 function mostrarDatoEnId (idElemento, valor) {
@@ -62,6 +72,7 @@ function mostrarGastoWeb (idElemento, gasto) {
     //Creación del botón Editar (Formulario)
     let buttonEditarConFormulario = document.createElement('button');
     buttonEditarConFormulario.type = 'button';
+    buttonEditarConFormulario.classList.add('gasto-editar-formulario');
     buttonEditarConFormulario.textContent = 'Editar (formulario)';
 
     buttonEditarConFormulario.addEventListener('click', function(event) {
@@ -301,7 +312,8 @@ function nuevoGastoWebFormulario(event) {
     //Botón submit
     let btnSubmit = formulario.querySelector('button[type="submit"]');    
     
-    btnSubmit.addEventListener('click', function(event){
+    //Pone en internet que Cypress trabaja con eventos submit
+    btnSubmit.addEventListener('submit', function(event){
         
         event.preventDefault();
 
@@ -368,7 +380,7 @@ function editarConFormulario(gasto, event) {
     //Botón Submit
     let botonSubmit = formulario.querySelector('button[type="submit"]');
     
-    botonSubmit.addEventListener('click', function(event){
+    botonSubmit.addEventListener('submit', function(event){
 
         event.preventDefault();
 
